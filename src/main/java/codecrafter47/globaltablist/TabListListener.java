@@ -21,6 +21,10 @@ package codecrafter47.globaltablist;
 import java.lang.reflect.Field;
 
 import net.md_5.bungee.UserConnection;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -46,8 +50,19 @@ public class TabListListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PostLoginEvent e) throws IllegalArgumentException, IllegalAccessException {
+        ProxiedPlayer player = e.getPlayer();
+
+        if (plugin.getConfig().showHeaderFooter) {
+            BaseComponent[] header = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().header.replace("{player}", player.getDisplayName())));
+            BaseComponent[] footer = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().footer));
+
+            player.setTabHeader(header, footer);
+        }
+
         if (plugin.getConfig().useGlobalTablist) {
-            tabListHandler.set(e.getPlayer(), new GlobalTablistHandler(e.getPlayer(), plugin));
+            GlobalTablistHandler handler = new GlobalTablistHandler(player, plugin);
+            tabListHandler.set(player, handler);
+            handler.onConnect();
         }
     }
 }

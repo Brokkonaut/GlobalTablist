@@ -19,15 +19,12 @@
 package codecrafter47.globaltablist;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
 import net.cubespace.Yamler.Config.Comments;
-import net.cubespace.Yamler.Config.Config;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import net.cubespace.Yamler.Config.YamlConfig;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public class MainConfig extends Config {
+public class MainConfig extends YamlConfig {
 
     @Comments({ "true: global tablist", "false: server unique tablist" })
     public boolean useGlobalTablist = true;
@@ -38,18 +35,14 @@ public class MainConfig extends Config {
     @Comments({ "Whether to send header/footer to the clients or not" })
     public boolean showHeaderFooter = true;
 
-    @Comments({ "This text will be shown above the tablist on 1.8 clients", " - {player} will be replaced with the name of the player", " - {newline} will insert a linebreak" })
+    @Comments({ "This text will be shown above the tablist", " - {player} will be replaced with the name of the player", " - {newline} will insert a linebreak" })
     public String header = "&6Welcome &f{player}";
 
-    @Comments({ "This text will be shown below the tablist on 1.8 clients", " - {player} will be replaced with the name of the player", " - {newline} will insert a linebreak" })
+    @Comments({ "This text will be shown below the tablist", " - {player} will be replaced with the name of the player", " - {newline} will insert a linebreak" })
     public String footer = "&4minecraft.net";
 
-    @Comments({ "On 1.7 clients this replaces the missing header and footer.", "You can add some custom text slots at the top of the player list",
-            " - {player} will be replaced with the name of the player" })
-    public List<String> custom_lines_top = Arrays.asList("&6Welcome", "&6{player}", "&6to our server", "", "", "");
-
     public MainConfig(Plugin plugin) throws InvalidConfigurationException {
-        CONFIG_FILE = new File("plugins" + File.separator + plugin.getDescription().getName(), "config.yml");
+        CONFIG_FILE = new File(plugin.getDataFolder(), "config.yml");
         CONFIG_HEADER = new String[] { "", "" };
 
         this.init();

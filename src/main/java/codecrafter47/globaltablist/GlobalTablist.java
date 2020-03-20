@@ -21,7 +21,6 @@ package codecrafter47.globaltablist;
 import java.util.logging.Level;
 
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -31,34 +30,16 @@ import net.md_5.bungee.api.plugin.Plugin;
  * @author Florian Stober
  */
 public class GlobalTablist extends Plugin {
-
-    private CustomizationHandler customizationHandler;
-
     /**
      * provides access to the configuration
      */
     private MainConfig config;
-
-    public MainConfig getConfig() {
-        return config;
-    }
-
-    private final TabListListener listener = new TabListListener(this);
 
     /**
      * Called when the plugin is enabled
      */
     @Override
     public void onEnable() {
-        // check whether bungee version is supported
-        try {
-            Class.forName("net.md_5.bungee.api.Title");
-        } catch (ClassNotFoundException ex) {
-            getLogger().severe("This plugin does not support your BungeeCord version");
-            getLogger().severe("Please use build #996 or above");
-            return;
-        }
-
         try {
             config = new MainConfig(this);
         } catch (InvalidConfigurationException ex) {
@@ -68,22 +49,10 @@ public class GlobalTablist extends Plugin {
             return;
         }
 
-        if (config.showHeaderFooter) {
-            customizationHandler = new CustomizationHandler(this);
-        }
-
-        ProxyServer.getInstance().getPluginManager().registerListener(this, listener);
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new TabListListener(this));
     }
 
-    /**
-     * called when the plugin is disabled
-     */
-    @Override
-    public void onDisable() {
-        // let the proxy do this
-    }
-
-    public void reportError(Throwable th) {
-        getLogger().log(Level.WARNING, ChatColor.RED + "An internal error occured! Please send the " + "following stacktrace to the developer in order to help" + " resolving the problem", th);
+    public MainConfig getConfig() {
+        return config;
     }
 }
